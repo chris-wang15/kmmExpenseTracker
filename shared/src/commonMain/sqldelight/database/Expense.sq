@@ -1,0 +1,47 @@
+CREATE TABLE expenseEntity(
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  cost REAL NOT NULL,
+  categoryId INTEGER NOT NULL,
+  time INTEGER NOT NULL
+);
+
+getAllExpense:
+SELECT *
+FROM expenseEntity;
+
+getExpenseById:
+SELECT *
+FROM expenseEntity
+WHERE id = ?;
+
+getExpenseByCategory:
+SELECT *
+FROM expenseEntity
+WHERE categoryId = ?;
+
+insertExpense:
+INSERT OR REPLACE
+INTO expenseEntity(
+    id,
+    title,
+    cost,
+    categoryId,
+    time
+) VALUES(?, ?, ?, ?, ?);
+
+deleteExpenseById:
+DELETE FROM expenseEntity
+WHERE id = ?;
+
+getIncomeBydate:
+SELECT SUM(cost) AS totalCost
+FROM expenseEntity
+WHERE cost > 0
+  AND strftime('%Y-%m', datetime(time / 1000, 'unixepoch')) = :timeStr;
+
+getOutcomeBydate:
+SELECT SUM(cost) AS totalCost
+FROM expenseEntity
+WHERE cost < 0
+  AND strftime('%Y-%m', datetime(time / 1000, 'unixepoch')) = :timeStr;
